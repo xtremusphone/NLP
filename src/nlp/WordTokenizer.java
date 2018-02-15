@@ -102,7 +102,7 @@ public List<String> tokenizer(){
                     continue;
                 }
                 else{
-                    compound.add(original.substring(0,original.length() - 2));
+                    compound.add(original.substring(0,original.length() - 1));
                     compound.add(original.charAt(original.length() - 1) + "");
                     continue;
                 }
