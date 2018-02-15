@@ -13,6 +13,5 @@ public class NLP {
         List<String> tokens = tokenizer.tokenizer(temp);
         System.out.println(tokens.toString());
         CorpusLoader crp = new CorpusLoader();
-
     }
 }

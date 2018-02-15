@@ -22,13 +22,13 @@ public class CorpusLoader {
         word_frequency = new ArrayList<>();
         word_document_frequency = new ArrayList<>();
         pos_tags = new ArrayList<>();
+        listof_postags = new ArrayList<>();
         loadCorpus();
     }
     
     private void loadCorpus(){
         File path = new File(CORPUS_PATH);
         documents = path.listFiles();
-        System.out.println(path.exists());
         
         Scanner scn;
         for(File x: documents){
@@ -40,18 +40,30 @@ public class CorpusLoader {
                     String composite = scn.next();
                     String word = composite.substring(0,composite.indexOf("/"));
                     
+                    System.out.println(words.size());
+                    
                     if(!words.contains(word.toLowerCase())){
                         words.add(word.toLowerCase());
                     }
                     
                     String pos_tag = composite.substring(composite.indexOf("/") + 1,composite.length());
-                    if(!listof_postags.contains(pos_tag.toLowerCase())){
-                        
-                    }
+                    //System.out.println(pos_tag);
                     
+                    if(!listof_postags.contains(pos_tag.toLowerCase())){
+                        listof_postags.add(pos_tag.toLowerCase());
+                    }
                     //get arraylist of word index
-                    ArrayList<String> tmp = pos_tags.get(words.indexOf(word));
-                    tmp.add(pos_tag);
+                    ArrayList<String> tmp;
+                    if(pos_tags.get(words.indexOf(word.toLowerCase())) == null){
+                        System.out.println("Not yet added");
+                        pos_tags.add(words.indexOf(word.toLowerCase()),new ArrayList<>());
+                        tmp = pos_tags.get(words.indexOf(word.toLowerCase()));
+                        tmp.add(pos_tag);
+                    }
+                    else{
+                        tmp = pos_tags.get(words.indexOf(word.toLowerCase()));
+                        tmp.add(pos_tag);
+                    }
                 }
             }
             catch(IOException e){
