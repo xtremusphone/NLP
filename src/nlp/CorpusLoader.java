@@ -5,24 +5,21 @@ package nlp;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class CorpusLoader {
     
     private final String CORPUS_PATH = "brown";
     private File[] documents;
-    public ArrayList<String> words;
-    public ArrayList<Integer> word_frequency;
-    public ArrayList<Integer> word_document_frequency;
-    public ArrayList<ArrayList<String>> pos_tags;
-    public ArrayList<String> listof_postags;
+    private ArrayList<String> words;
+    private HashMap<Integer,WordData> word_info;
+    private ArrayList<String> listof_postags;
     
     public CorpusLoader(){
         words = new ArrayList<>();
-        word_frequency = new ArrayList<>();
-        word_document_frequency = new ArrayList<>();
-        pos_tags = new ArrayList<>();
         listof_postags = new ArrayList<>();
+        word_info = new HashMap<>();
         loadCorpus();
     }
     
@@ -30,9 +27,10 @@ public class CorpusLoader {
         File path = new File(CORPUS_PATH);
         documents = path.listFiles();
         
+        System.out.println("Loading Brown Corpus and extracting information...");
         Scanner scn;
         for(File x: documents){
-            System.out.println(x.getName());
+            System.out.println("Extracting from: " + x.getName() + " current total word: " + words.size());
             try{
                 scn = new Scanner(x);
                 while(scn.hasNext()){
@@ -40,29 +38,35 @@ public class CorpusLoader {
                     String composite = scn.next();
                     String word = composite.substring(0,composite.indexOf("/"));
                     
-                    System.out.println(words.size());
-                    
                     if(!words.contains(word.toLowerCase())){
                         words.add(word.toLowerCase());
                     }
                     
                     String pos_tag = composite.substring(composite.indexOf("/") + 1,composite.length());
-                    //System.out.println(pos_tag);
                     
                     if(!listof_postags.contains(pos_tag.toLowerCase())){
                         listof_postags.add(pos_tag.toLowerCase());
                     }
-                    //get arraylist of word index
-                    ArrayList<String> tmp;
-                    if(pos_tags.get(words.indexOf(word.toLowerCase())) == null){
-                        System.out.println("Not yet added");
-                        pos_tags.add(words.indexOf(word.toLowerCase()),new ArrayList<>());
-                        tmp = pos_tags.get(words.indexOf(word.toLowerCase()));
-                        tmp.add(pos_tag);
+
+                    if(word_info.get(words.indexOf(word.toLowerCase())) == null){
+                        WordData temp = new WordData();
+                        temp.total_word_frequency += 1;
+                        temp.pos_tag_list.add(pos_tag.toLowerCase());
+                        temp.pos_tag_frequency.put(temp.pos_tag_list.indexOf(pos_tag.toLowerCase()), 1);
+                        word_info.put(words.indexOf(word.toLowerCase()), temp);
                     }
                     else{
-                        tmp = pos_tags.get(words.indexOf(word.toLowerCase()));
-                        tmp.add(pos_tag);
+                        WordData temp = word_info.get(words.indexOf(word.toLowerCase()));
+                        temp.total_word_frequency += 1;
+                        if(!temp.pos_tag_list.contains(pos_tag.toLowerCase())){
+                            temp.pos_tag_list.add(pos_tag.toLowerCase());
+                            temp.pos_tag_frequency.put(temp.pos_tag_list.indexOf(pos_tag.toLowerCase()), 1);
+                        }
+                        else{
+                            int new_frequency = temp.pos_tag_frequency.get(temp.pos_tag_list.indexOf(pos_tag.toLowerCase())) + 1;
+                            temp.pos_tag_frequency.put(temp.pos_tag_list.indexOf(pos_tag.toLowerCase()), new_frequency);
+                            ++temp.total_word_frequency;
+                        }
                     }
                 }
             }
@@ -70,6 +74,31 @@ public class CorpusLoader {
                 System.out.println(e);
             }
         }
+        //vocabCleanup();
+    }
+    
+    private void vocabCleanup(){
+        for(int i = 0;i < words.size();i++){
+            WordData tmp = word_info.get(i);
+            if(tmp.total_word_frequency <= 5){
+                System.out.println("Removing : " + words.get(i) + " with frequency of "  + word_info.get(i).total_word_frequency + " with POS tag of " + word_info.get(i).pos_tag_list.toString());
+                words.remove(i);
+                word_info.remove(i);
+            }
+        }
+        System.out.println("Total word after clean up: " + words.size());
+    }
+    
+    public ArrayList<String> getListofPOSTags(){
+        return listof_postags;
+    }
+    
+    public ArrayList<String> getListofWords(){
+        return words;
+    }
+    
+    public HashMap<Integer,WordData> getListofWordsData(){
+        return word_info;
     }
     
 }

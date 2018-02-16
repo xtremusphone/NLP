@@ -1,6 +1,7 @@
 package nlp;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class NLP {
     static String[] conjunctions = {"for","and","nor","but","or","yet","so"};
@@ -9,9 +10,23 @@ public class NLP {
     
     public static void main (String[] args){
         WordTokenizer tokenizer = new WordTokenizer();
-        String temp = "My name is F.B.I..";
-        List<String> tokens = tokenizer.tokenizer(temp);
-        System.out.println(tokens.toString());
         CorpusLoader crp = new CorpusLoader();
+        
+        Scanner scn = new Scanner(System.in);
+        String input = "";
+        while(!input.equals("x")){
+            System.out.println("Enter new text:");
+            input = scn.nextLine();
+            List<String> tokens = tokenizer.tokenizer(input);
+            for(String x:tokens){
+                if(crp.getListofWords().indexOf(x.toLowerCase()) != -1){
+                    System.out.print(crp.getListofWordsData().get(crp.getListofWords().indexOf(x.toLowerCase())).pos_tag_list.toString() + " ");
+                }
+                else{
+                    System.out.print("UNK" + " ");
+                }
+            }
+            System.out.println("");
+        }
     }
 }
