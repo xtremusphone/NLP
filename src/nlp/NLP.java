@@ -10,9 +10,10 @@ public class NLP {
     
     public static void main (String[] args){
         WordTokenizer tokenizer = new WordTokenizer();
-        CorpusLoader crp = new CorpusLoader();
+        //CorpusLoader crp = new CorpusLoader();
         
-        Scanner scn = new Scanner(System.in);
+        
+        /*Scanner scn = new Scanner(System.in);
         String input = "";
         while(!input.equals("x")){
             System.out.println("Enter new text:");
@@ -28,5 +29,8 @@ public class NLP {
             }
             System.out.println("");
         }
+        */
+        
+        AutoCorrect ac = new AutoCorrect("asdasdasda");
     }
 }

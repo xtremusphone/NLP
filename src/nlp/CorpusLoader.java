@@ -1,9 +1,19 @@
 package nlp;
 
-//This class is to specifically extract data from Brown Corpus
+//This class is to extract data from Brown Corpus
+/*
+There will be some changes needed to be addressed,
+1. for instance for word data, the pos tag list frequency should be changed to hashmap.
+2. Any usage of hashmap should be using String as key as lookup in Dictionary can be expensive
+3. Another addition needed to be addressed is the n-gram of words and pos-tags should be extracted along the way
+4. Optimization should be carry-out as the total run needed for extracting took aroud 1 ~ 1.5 minutes which is too long
+5. Serialization of objects is needed to remove the need of running through all the steps which can take a long time
+6. This class will be used for another class (MaxEnt Post Tagging).
+*/
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -75,6 +85,7 @@ public class CorpusLoader {
             }
         }
         //vocabCleanup();
+        saveDictionary();
     }
     
     private void vocabCleanup(){
@@ -101,4 +112,15 @@ public class CorpusLoader {
         return word_info;
     }
     
+    public void saveDictionary(){
+        try{
+            PrintWriter wrt = new PrintWriter(new File("Dictionary.txt"));
+            for(String x:words){
+                wrt.println(x);
+            }
+        }
+        catch(IOException e){
+            System.out.println(e);
+        }
+    }
 }
