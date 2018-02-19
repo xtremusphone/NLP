@@ -20,16 +20,25 @@ import java.util.Scanner;
 
 public class CorpusLoader {
     
+    /*
+    TODO: serialize obj to make it faster to load initial models.
+    */
+    
     private final String CORPUS_PATH = "brown";
     private File[] documents;
+    
+    //Core data needed for POSTagger class later on;
     private ArrayList<String> words;
+    //TODO: change Integer to String, to reduce lookup into words list which could be expensive
     private HashMap<Integer,WordData> word_info;
     private ArrayList<String> listof_postags;
+    private HashMap<String,Integer> bigramTags;
     
     public CorpusLoader(){
         words = new ArrayList<>();
         listof_postags = new ArrayList<>();
         word_info = new HashMap<>();
+        bigramTags = new HashMap<>();
         loadCorpus();
     }
     
@@ -40,24 +49,40 @@ public class CorpusLoader {
         System.out.println("Loading Brown Corpus and extracting information...");
         Scanner scn;
         for(File x: documents){
-            System.out.println("Extracting from: " + x.getName() + " current total word: " + words.size());
+            System.out.println("Extracting from: " + x.getName() + " current total word: " + words.size() + " current bigram size: " + bigramTags.size());
+            String previous = "pad";
             try{
                 scn = new Scanner(x);
                 while(scn.hasNext()){
-                    //split pos-tag and word
                     String composite = scn.next();
-                    String word = composite.substring(0,composite.indexOf("/"));
                     
+                    //Splitting word from it's POS Tag
+                    String word = composite.substring(0,composite.indexOf("/"));
+                    //splitting string to get the POS Tagging
+                    String pos_tag = composite.substring(composite.indexOf("/") + 1,composite.length());
+                    
+                    //check if the word is already added into list of words
                     if(!words.contains(word.toLowerCase())){
                         words.add(word.toLowerCase());
                     }
                     
-                    String pos_tag = composite.substring(composite.indexOf("/") + 1,composite.length());
-                    
+                    //get the list of tags available in the corpus
                     if(!listof_postags.contains(pos_tag.toLowerCase())){
                         listof_postags.add(pos_tag.toLowerCase());
                     }
-
+                    
+                    //populating bigram of tag.
+                    String index = previous.toLowerCase() + pos_tag.toLowerCase();
+                    if(bigramTags.containsKey(index)){
+                        bigramTags.put(index, bigramTags.get(index) + 1);
+                    }
+                    else{
+                        bigramTags.put(index, 1);
+                    }
+                    previous = pos_tag.toLowerCase();
+                    
+                    //check if the word data exist in the list already of not, if not then add new word data
+                    //TODO: merge the code with add to new dictionary since it is redundant and can improve performance actually
                     if(word_info.get(words.indexOf(word.toLowerCase())) == null){
                         WordData temp = new WordData();
                         temp.total_word_frequency += 1;
@@ -66,6 +91,7 @@ public class CorpusLoader {
                         word_info.put(words.indexOf(word.toLowerCase()), temp);
                     }
                     else{
+                        //create new obj of word info and populate the data
                         WordData temp = word_info.get(words.indexOf(word.toLowerCase()));
                         temp.total_word_frequency += 1;
                         if(!temp.pos_tag_list.contains(pos_tag.toLowerCase())){
@@ -88,6 +114,10 @@ public class CorpusLoader {
         saveDictionary();
     }
     
+    /*
+    This method is just to remove unique word which have lower than frequency set
+    Not crucial in the main class itself
+    */
     private void vocabCleanup(){
         for(int i = 0;i < words.size();i++){
             WordData tmp = word_info.get(i);
@@ -99,7 +129,27 @@ public class CorpusLoader {
         }
         System.out.println("Total word after clean up: " + words.size());
     }
+      
+    /*
+    Save list of words into text file for faster loading later on
+    TODO: serialize obj of word info, bigram and also pos list for faster loading.
+    */
+    public void saveDictionary(){
+        try{
+            PrintWriter wrt = new PrintWriter(new File("Dictionary.txt"));
+            for(String x:words){
+                wrt.println(x);
+            }
+            wrt.close();
+        }
+        catch(IOException e){
+            System.out.println(e);
+        }
+    }
     
+    /*
+    Standard getter method for all of the infos.
+    */
     public ArrayList<String> getListofPOSTags(){
         return listof_postags;
     }
@@ -110,17 +160,5 @@ public class CorpusLoader {
     
     public HashMap<Integer,WordData> getListofWordsData(){
         return word_info;
-    }
-    
-    public void saveDictionary(){
-        try{
-            PrintWriter wrt = new PrintWriter(new File("Dictionary.txt"));
-            for(String x:words){
-                wrt.println(x);
-            }
-        }
-        catch(IOException e){
-            System.out.println(e);
-        }
     }
 }

@@ -34,7 +34,8 @@ public class AutoCorrect {
             try{
                 Scanner scn = new Scanner(dict);
                 while(scn.hasNextLine()){
-                    bagOfWord.add(scn.nextLine());
+                    String tmp = scn.nextLine();
+                    bagOfWord.add(tmp);
                 }
             }
             catch(IOException e){
@@ -46,5 +47,63 @@ public class AutoCorrect {
             return false;
     }
     
+    public String spellChecker(String input){
+        if(bagOfWord.contains(input.toLowerCase()))
+            return input;
+        else{
+            for(String x: editDistance1(input)){
+                if(bagOfWord.contains(x.toLowerCase())){
+                    return x;
+                }
+                    
+            }
+
+            for(String x:editDistance2(input)){
+                if(bagOfWord.contains(x.toLowerCase()))
+                    return x;
+            }
+        }
+        return null;
+    }
     
+    private ArrayList<String> editDistance1(String input){
+        ArrayList<String> candidate = new ArrayList<>();
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        
+        //1. replacing a letter
+        for(int i = 0;i < input.length();i++){
+            for(int j = 0;j < alphabet.length();j++){
+                candidate.add(input.substring(0,i) + alphabet.charAt(j) + input.substring(i + 1,input.length()));
+            }
+        }
+        
+        //2. removing a letter
+        for(int i = 0;i < input.length();i++){
+            candidate.add(input.substring(0,i) + input.substring(i + 1,input.length()));
+        }
+        
+        //3. inserting a letter
+        for(int i = 0;i <= input.length();i++){
+            for(int j = 0;j < alphabet.length();j++){
+                candidate.add(input.substring(0,i) + alphabet.charAt(j) +input.substring(i,input.length()));
+            }
+        }
+        
+        //4. swapping letter
+        for(int i =0; i < input.length() - 1;i++){
+            candidate.add(input.substring(0,i) + input.charAt(i + 1) + input.charAt(i) + input.substring(i + 2,input.length()));
+        }
+        
+        return candidate;
+    }
+    
+    public ArrayList<String> editDistance2(String input){
+        ArrayList<String> tmp = new ArrayList<>();
+        for(String x:editDistance1(input)){
+            for(String y:editDistance1(x)){
+                tmp.add(y);
+            }
+        }
+        return tmp;
+    }
 }

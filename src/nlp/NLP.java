@@ -31,6 +31,9 @@ public class NLP {
         }
         */
         
-        AutoCorrect ac = new AutoCorrect("asdasdasda");
+        String asd = "wae";
+        AutoCorrect ac = new AutoCorrect(asd);
+        System.out.println(ac.spellChecker(asd));
+        
     }
 }
