@@ -10,7 +10,6 @@ There will be some changes needed to be addressed,
 5. Serialization of objects is needed to remove the need of running through all the steps which can take a long time
 6. This class will be used for another class (MaxEnt Post Tagging).
 */
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -30,15 +29,15 @@ public class CorpusLoader {
     //Core data needed for POSTagger class later on;
     private ArrayList<String> words;
     //TODO: change Integer to String, to reduce lookup into words list which could be expensive
-    private HashMap<Integer,WordData> word_info;
+    private HashMap<String,WordData> word_info;
     private ArrayList<String> listof_postags;
-    private HashMap<String,Integer> bigramTags;
+    private HashMap<String,Integer> pos_transition_frequency;
     
     public CorpusLoader(){
         words = new ArrayList<>();
         listof_postags = new ArrayList<>();
         word_info = new HashMap<>();
-        bigramTags = new HashMap<>();
+        pos_transition_frequency = new HashMap<>();
         loadCorpus();
     }
     
@@ -49,7 +48,7 @@ public class CorpusLoader {
         System.out.println("Loading Brown Corpus and extracting information...");
         Scanner scn;
         for(File x: documents){
-            System.out.println("Extracting from: " + x.getName() + " current total word: " + words.size() + " current bigram size: " + bigramTags.size());
+            System.out.println("Extracting from: " + x.getName() + " current total word: " + words.size() + " current bigram size: " + pos_transition_frequency.size());
             String previous = "pad";
             try{
                 scn = new Scanner(x);
@@ -61,6 +60,16 @@ public class CorpusLoader {
                     //splitting string to get the POS Tagging
                     String pos_tag = composite.substring(composite.indexOf("/") + 1,composite.length());
                     
+                    if(pos_transition_frequency.containsKey(previous + pos_tag) == true){
+                        int val = pos_transition_frequency.get(previous + pos_tag) + 1;
+                        pos_transition_frequency.put(previous + pos_tag.toLowerCase(), val);
+                    }
+                    else{
+                        pos_transition_frequency.put(previous + pos_tag.toLowerCase(), 1);
+                    }
+                    
+                    previous = pos_tag.toLowerCase();
+                    
                     //check if the word is already added into list of words
                     if(!words.contains(word.toLowerCase())){
                         words.add(word.toLowerCase());
@@ -71,36 +80,28 @@ public class CorpusLoader {
                         listof_postags.add(pos_tag.toLowerCase());
                     }
                     
-                    //populating bigram of tag.
                     String index = previous.toLowerCase() + pos_tag.toLowerCase();
-                    if(bigramTags.containsKey(index)){
-                        bigramTags.put(index, bigramTags.get(index) + 1);
-                    }
-                    else{
-                        bigramTags.put(index, 1);
-                    }
-                    previous = pos_tag.toLowerCase();
                     
                     //check if the word data exist in the list already of not, if not then add new word data
                     //TODO: merge the code with add to new dictionary since it is redundant and can improve performance actually
-                    if(word_info.get(words.indexOf(word.toLowerCase())) == null){
+                    if(word_info.get(word.toLowerCase()) == null){
                         WordData temp = new WordData();
                         temp.total_word_frequency += 1;
                         temp.pos_tag_list.add(pos_tag.toLowerCase());
-                        temp.pos_tag_frequency.put(temp.pos_tag_list.indexOf(pos_tag.toLowerCase()), 1);
-                        word_info.put(words.indexOf(word.toLowerCase()), temp);
+                        temp.pos_tag_frequency.put(pos_tag.toLowerCase(), 1);
+                        word_info.put(word.toLowerCase(), temp);
                     }
                     else{
                         //create new obj of word info and populate the data
-                        WordData temp = word_info.get(words.indexOf(word.toLowerCase()));
+                        WordData temp = word_info.get(word.toLowerCase());
                         temp.total_word_frequency += 1;
                         if(!temp.pos_tag_list.contains(pos_tag.toLowerCase())){
                             temp.pos_tag_list.add(pos_tag.toLowerCase());
-                            temp.pos_tag_frequency.put(temp.pos_tag_list.indexOf(pos_tag.toLowerCase()), 1);
+                            temp.pos_tag_frequency.put(pos_tag.toLowerCase(), 1);
                         }
                         else{
-                            int new_frequency = temp.pos_tag_frequency.get(temp.pos_tag_list.indexOf(pos_tag.toLowerCase())) + 1;
-                            temp.pos_tag_frequency.put(temp.pos_tag_list.indexOf(pos_tag.toLowerCase()), new_frequency);
+                            int new_frequency = temp.pos_tag_frequency.get(pos_tag.toLowerCase()) + 1;
+                            temp.pos_tag_frequency.put(pos_tag.toLowerCase(), new_frequency);
                             ++temp.total_word_frequency;
                         }
                     }
@@ -158,7 +159,11 @@ public class CorpusLoader {
         return words;
     }
     
-    public HashMap<Integer,WordData> getListofWordsData(){
+    public HashMap<String,WordData> getListofWordsData(){
         return word_info;
+    }
+    
+    public HashMap<String,Integer> getPOSTransFreq(){
+        return pos_transition_frequency;
     }
 }

@@ -9,7 +9,7 @@ public class WordData implements Serializable{
     public int total_word_frequency = 0;
     public int word_document_frequency = 0;
     public ArrayList<String> pos_tag_list;
-    public HashMap<Integer,Integer> pos_tag_frequency;
+    public HashMap<String,Integer> pos_tag_frequency;
     
     /*
     TODO: Need to change pos_tag_frequency to cater for TF-IDF implementation later on.
