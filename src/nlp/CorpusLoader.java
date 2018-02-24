@@ -32,12 +32,14 @@ public class CorpusLoader {
     private HashMap<String,WordData> word_info;
     private ArrayList<String> listof_postags;
     private HashMap<String,Integer> pos_transition_frequency;
+    private HashMap<String,Integer> pos_total_frequency;
     
     public CorpusLoader(){
         words = new ArrayList<>();
         listof_postags = new ArrayList<>();
         word_info = new HashMap<>();
         pos_transition_frequency = new HashMap<>();
+        pos_total_frequency = new HashMap<>();
         loadCorpus();
     }
     
@@ -102,7 +104,6 @@ public class CorpusLoader {
                         else{
                             int new_frequency = temp.pos_tag_frequency.get(pos_tag.toLowerCase()) + 1;
                             temp.pos_tag_frequency.put(pos_tag.toLowerCase(), new_frequency);
-                            ++temp.total_word_frequency;
                         }
                     }
                 }

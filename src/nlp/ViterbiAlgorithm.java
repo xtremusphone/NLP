@@ -6,15 +6,18 @@ import java.util.List;
 public class ViterbiAlgorithm {
     
     private String user_input = "";
-    private CorpusLoader crp;
+    //private CorpusLoader crp;
+    private Con2000Loader crp;
     
     public ViterbiAlgorithm(){
-        crp = new CorpusLoader();
+       // crp = new CorpusLoader();
+       crp = new Con2000Loader();
     }
     
     public ViterbiAlgorithm(String input){
         user_input = input;
-        crp = new CorpusLoader();
+        //crp = new CorpusLoader();
+        crp = new Con2000Loader();
     }
     
     public HashMap<String,String> getPOSTagging(String input){
@@ -24,11 +27,19 @@ public class ViterbiAlgorithm {
         List<String> tokenized = tokens.tokenizer(input);
         for(int i = 0; i < tokenized.size();i++){
             if(!crp.getListofWords().contains(tokenized.get(i).toLowerCase())){
-                mapped.put(tokenized.get(i), "unk");
+                if(tokenized.get(i).equals(tokenized.get(i).toLowerCase())){
+                    mapped.put(tokenized.get(i), "NN");
+                }
+                else{
+                    mapped.put(tokenized.get(i), "NNP");
+                }
+                //mapped.put(tokenized.get(i), "UNK");
+                continue;
             }
+            
             String previous = "";
             if(i == 0){
-                previous = "pad";
+                previous = "<START>";
             }
             else{
                 previous = mapped.get(tokenized.get(i - 1));
@@ -43,14 +54,10 @@ public class ViterbiAlgorithm {
                 
             double pos_max_prob = 0;
             String pos_max = "";
-            for(int val:crp.getListofWordsData().get(tokenized.get(i).toLowerCase()).pos_tag_frequency.values()){
-                total_word_frequency += val;
-            }
             
             if(i == 0){
                 for(String pos:crp.getListofWordsData().get(tokenized.get(i).toLowerCase()).pos_tag_list){
-                    double pos_probability = (double)crp.getListofWordsData().get(tokenized.get(i).toLowerCase()).pos_tag_frequency.get(pos) / (double)total_word_frequency;
-     
+                    double pos_probability = (double)crp.getListofWordsData().get(tokenized.get(i).toLowerCase()).pos_tag_frequency.get(pos) / (double)crp.getListofWordsData().get(tokenized.get(i).toLowerCase()).total_word_frequency;
                     if(pos_probability > pos_max_prob){
                         pos_max_prob = pos_probability;
                         pos_max = pos;
@@ -59,12 +66,14 @@ public class ViterbiAlgorithm {
             }
             else{
                 for(String pos:crp.getListofWordsData().get(tokenized.get(i).toLowerCase()).pos_tag_list){
-                    double pos_probability = (double)crp.getListofWordsData().get(tokenized.get(i).toLowerCase()).pos_tag_frequency.get(pos) / (double)total_word_frequency;
+                    
+                    double pos_probability = (double)crp.getListofWordsData().get(tokenized.get(i).toLowerCase()).pos_tag_frequency.get(pos) / (double)crp.getListofWordsData().get(tokenized.get(i).toLowerCase()).total_word_frequency;
                     double transition_probability;
+                    
                     if(crp.getPOSTransFreq().get(previous + pos) == null)
                         transition_probability = 0;
                     else{
-                        transition_probability = (double)crp.getPOSTransFreq().get(previous + pos) / (double)total_transition_frequency;
+                        transition_probability = (double)crp.getPOSTransFreq().get(previous + pos) / (double)crp.getPOSTotalFreq().get(previous);
                     }
                         
                     double final_pos_probability = pos_probability * transition_probability;
@@ -74,15 +83,20 @@ public class ViterbiAlgorithm {
                         pos_max = pos;
                     }
                 }
+                if(pos_max.equals("")){
+                    for(String pos:crp.getListofWordsData().get(tokenized.get(i).toLowerCase()).pos_tag_list){
+                        double pos_probability = (double)crp.getListofWordsData().get(tokenized.get(i).toLowerCase()).pos_tag_frequency.get(pos) / (double)crp.getListofWordsData().get(tokenized.get(i).toLowerCase()).total_word_frequency;
+
+                        if(pos_probability > pos_max_prob){
+                            pos_max_prob = pos_probability;
+                            pos_max = pos;
+                        }
+                    }
+                }
             }
             mapped.put(tokenized.get(i), pos_max);
         }
-        handleUNK(mapped);
+        
         return mapped;
-    }
-    
-    private HashMap<String,String> handleUNK(HashMap<String,String> pos){
-        //not yet done.
-        return null;
     }
 }

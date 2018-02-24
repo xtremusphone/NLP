@@ -13,17 +13,22 @@ public class NLP {
         
         Scanner scn = new Scanner(System.in);
         String input = "";
-        ViterbiAlgorithm va = new ViterbiAlgorithm();
-        while(!input.equals("x")){
+        //ViterbiAlgorithm va = new ViterbiAlgorithm();
+        TagMapper mp = new TagMapper();
+        //Con2000Loader cl = new Con2000Loader();
+        /*while(!input.equals("x")){
             System.out.println("Enter new text:");
             input = scn.nextLine();
+            //System.out.println(mp.getConverted(va.getPOSTagging(input)).toString());
             System.out.println(va.getPOSTagging(input).toString());
-        }
+            //System.out.println(cl.getListofWords().contains(input));
+        }*/
         
        /* 
         String asd = "wae";
         AutoCorrect ac = new AutoCorrect(asd);
         System.out.println(ac.spellChecker(asd));
         */
+        Testing tst = new Testing();
     }
 }

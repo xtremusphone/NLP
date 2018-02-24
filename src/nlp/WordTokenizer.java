@@ -56,13 +56,21 @@ public List<String> tokenizer(){
                 compound.add(")");
                 continue;
             }
-            else if(original.charAt(0) == '('){
+            else if(original.charAt(0) == '(' && original.length() > 1){
                 compound.add("(");
                 compound.add(original.substring(1,original.length() - 1));
                 continue;
             }
-            else if(original.charAt(original.length() - 1) == ')'){
+            else if(original.charAt(original.length() - 1) == ')' && original.length() > 1){
                 compound.add(original.substring(0,original.length() - 2));
+                compound.add(")");
+                continue;
+            }
+            else if(original.equals("(")){
+                compound.add("(");
+                continue;
+            }
+            else if(original.equals(")")){
                 compound.add(")");
                 continue;
             }
@@ -96,7 +104,11 @@ public List<String> tokenizer(){
             }
             
             if(Character.isLetterOrDigit(original.charAt(original.length() - 1)) == false){
-                if(original.length() <= 2){
+                if(original.length() == 1){
+                    compound.add(original);
+                    continue;
+                }
+                else if(original.length() <= 2){
                     compound.add(original.charAt(0) + "");
                     compound.add(original.charAt(1) + "");
                     continue;
