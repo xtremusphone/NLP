@@ -2,11 +2,12 @@ package nlp;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class Con2000Loader {
+public class Con2000Loader implements Serializable {
     
     private final String CORPUS_PATH = "train.txt";
     private ArrayList<String> words;

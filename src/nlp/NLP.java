@@ -1,7 +1,11 @@
 package nlp;
 
-import java.util.List;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class NLP {
     static String[] conjunctions = {"for","and","nor","but","or","yet","so"};
@@ -15,20 +19,35 @@ public class NLP {
         String input = "";
         //ViterbiAlgorithm va = new ViterbiAlgorithm();
         TagMapper mp = new TagMapper();
-        //Con2000Loader cl = new Con2000Loader();
-        /*while(!input.equals("x")){
-            System.out.println("Enter new text:");
-            input = scn.nextLine();
-            //System.out.println(mp.getConverted(va.getPOSTagging(input)).toString());
-            System.out.println(va.getPOSTagging(input).toString());
-            //System.out.println(cl.getListofWords().contains(input));
+        //Con2000Loader CN = new Con2000Loader();
+        /*if((new File("Model.slz")).exists() == false){
+            try {
+                ObjectOutputStream obj = new ObjectOutputStream(new FileOutputStream("Model.slz"));
+                obj.writeObject(CN);
+                obj.close();
+            } catch (IOException ex) {
+                Logger.getLogger(NLP.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }*/
-        
-       /* 
-        String asd = "wae";
-        AutoCorrect ac = new AutoCorrect(asd);
-        System.out.println(ac.spellChecker(asd));
-        */
+       /* try{
+            ObjectInputStream obj = new ObjectInputStream(new FileInputStream("Model.slz"));
+            try {
+                Con2000Loader temp = (Con2000Loader)obj.readObject();
+                String word = "while";
+                
+                System.out.println(temp.getListofWordsData().get(word).pos_tag_list + temp.getListofWordsData().get(word).pos_tag_frequency.toString());
+                System.out.println(temp.getListofPOSTags());
+                System.out.println(temp.getPOSTransFreq().get("DTNNP"));
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(NLP.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        catch(IOException e){
+            System.out.println(e);
+        }*/
+        //Con2000Loader cl = new Con2000Loader();
+        //System.out.println(cl.getListofPOSTags().toString());
         Testing tst = new Testing();
     }
 }

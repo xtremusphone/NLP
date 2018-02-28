@@ -2,6 +2,7 @@ package nlp;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -15,6 +16,8 @@ public class Testing {
     }
     
     public void test(){
+        BrillTagger bt = new BrillTagger();
+        WordTokenizer wt = new WordTokenizer();
         try{
             Scanner scn = new Scanner(new File("test.txt"));
             HashMap<String,String> actual = new HashMap<>();

@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>src/nlp/WordTokenizer.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>4</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/NLP/src/nlp/Con2000Loader.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/NLP/src/nlp/AutoCorrect.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/NLP/src/nlp/Testing.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/NLP/src/nlp/BrillTagger.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/NLP/src/nlp/Chunker.java</file>
             <file>file:/C:/Users/User/Documents/NetBeansProjects/NLP/src/nlp/NLP.java</file>
             <file>file:/C:/Users/User/Documents/NetBeansProjects/NLP/src/nlp/ViterbiAlgorithm.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/NLP/src/nlp/CorpusLoader.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/NLP/src/nlp/WordData.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/NLP/src/nlp/WordTokenizer.java</file>
         </group>
     </open-files>
 </project-private>

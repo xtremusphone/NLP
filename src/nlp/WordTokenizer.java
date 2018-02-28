@@ -5,25 +5,20 @@ import java.util.List;
 
 public class WordTokenizer {
 
-    private List<String> compound;
+    //private List<String> compound;
     private String in;
     
     public WordTokenizer(){
-        compound = new ArrayList();
+       // compound = new ArrayList();
     }
     
     public WordTokenizer(String input){
         in = input;
-        compound = new ArrayList();
+        //compound = new ArrayList();
     }
-    
-public List<String> tokenizer(){
-        if(in == null) return null;
-        
-        return compound;
-    }
-    
+
     public List<String> tokenizer(String input){
+        List<String> compound = new ArrayList<>();
         if(input.equals("") || input.equals(" ")) return null;
         
         //greedy split
@@ -78,7 +73,7 @@ public List<String> tokenizer(){
             //check if it is an acronym, words that actually ends with period or words that is actually at end of the sentence
             if(Character.isAlphabetic(original.charAt(0)) && original.length() > 1 && original.charAt(1) == '.'){
                 int last_index = original.lastIndexOf(".");
-                if(original.charAt(last_index - 1) == '.'){
+                if(original.charAt(last_index - 1) == '.' && !original.substring(0,1).equals(original.substring(0,1).toLowerCase())){
                     compound.add(original.substring(0,last_index));
                     compound.add(".");
                     continue;
@@ -118,6 +113,18 @@ public List<String> tokenizer(){
                     compound.add(original.charAt(original.length() - 1) + "");
                     continue;
                 }
+            }
+            
+            if(original.contains("'") && original.endsWith("'s") && original.length() > 2){
+                compound.add(original.substring(0,original.indexOf("'")));
+                compound.add("'s");
+                continue;
+            }
+            
+            if(original.contains("'") && original.endsWith("'t") && original.length() > 2){
+                compound.add(original.substring(0,original.indexOf("'") - 1));
+                compound.add("n't");
+                continue;
             }
             
             //check if clitic or not
