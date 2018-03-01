@@ -1,7 +1,11 @@
 package nlp;
 
-import java.util.List;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class NLP {
     static String[] conjunctions = {"for","and","nor","but","or","yet","so"};
@@ -9,28 +13,41 @@ public class NLP {
     "along","following","across","behind","beyond","plus","except","but","up","out","around","down","off","above","near"};
     
     public static void main (String[] args){
-        WordTokenizer tokenizer = new WordTokenizer();
-        //CorpusLoader crp = new CorpusLoader();
+        //WordTokenizer tokenizer = new WordTokenizer();
         
-        
-        /*Scanner scn = new Scanner(System.in);
+        Scanner scn = new Scanner(System.in);
         String input = "";
-        while(!input.equals("x")){
-            System.out.println("Enter new text:");
-            input = scn.nextLine();
-            List<String> tokens = tokenizer.tokenizer(input);
-            for(String x:tokens){
-                if(crp.getListofWords().indexOf(x.toLowerCase()) != -1){
-                    System.out.print(crp.getListofWordsData().get(crp.getListofWords().indexOf(x.toLowerCase())).pos_tag_list.toString() + " ");
-                }
-                else{
-                    System.out.print("UNK" + " ");
-                }
+        //ViterbiAlgorithm va = new ViterbiAlgorithm();
+        TagMapper mp = new TagMapper();
+        //Con2000Loader CN = new Con2000Loader();
+        /*if((new File("Model.slz")).exists() == false){
+            try {
+                ObjectOutputStream obj = new ObjectOutputStream(new FileOutputStream("Model.slz"));
+                obj.writeObject(CN);
+                obj.close();
+            } catch (IOException ex) {
+                Logger.getLogger(NLP.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("");
+            
+        }*/
+       /* try{
+            ObjectInputStream obj = new ObjectInputStream(new FileInputStream("Model.slz"));
+            try {
+                Con2000Loader temp = (Con2000Loader)obj.readObject();
+                String word = "while";
+                
+                System.out.println(temp.getListofWordsData().get(word).pos_tag_list + temp.getListofWordsData().get(word).pos_tag_frequency.toString());
+                System.out.println(temp.getListofPOSTags());
+                System.out.println(temp.getPOSTransFreq().get("DTNNP"));
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(NLP.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        */
-        
-        AutoCorrect ac = new AutoCorrect("asdasdasda");
+        catch(IOException e){
+            System.out.println(e);
+        }*/
+        //Con2000Loader cl = new Con2000Loader();
+        //System.out.println(cl.getListofPOSTags().toString());
+        Testing tst = new Testing();
     }
 }
