@@ -30,24 +30,27 @@ public class NLP {
             }
             
         }*/
-       /* try{
+       try{
             ObjectInputStream obj = new ObjectInputStream(new FileInputStream("Model.slz"));
             try {
                 Con2000Loader temp = (Con2000Loader)obj.readObject();
                 String word = "while";
-                
-                System.out.println(temp.getListofWordsData().get(word).pos_tag_list + temp.getListofWordsData().get(word).pos_tag_frequency.toString());
-                System.out.println(temp.getListofPOSTags());
-                System.out.println(temp.getPOSTransFreq().get("DTNNP"));
+                for(String wordss:temp.getListofWords()){
+                    if(temp.getListofWordsData().get(wordss).pos_tag_list.contains("VB") || temp.getListofWordsData().get(wordss).pos_tag_list.contains("VBD"))
+                        System.out.println(wordss);
+                }
+                //System.out.println(temp.getListofWordsData().get(word).pos_tag_list + temp.getListofWordsData().get(word).pos_tag_frequency.toString());
+                //System.out.println(temp.getListofPOSTags());
+                //System.out.println(temp.getPOSTransFreq().get("DTNNP"));
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(NLP.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         catch(IOException e){
             System.out.println(e);
-        }*/
+        }
         //Con2000Loader cl = new Con2000Loader();
         //System.out.println(cl.getListofPOSTags().toString());
-        Testing tst = new Testing();
+        //Testing tst = new Testing();
     }
 }

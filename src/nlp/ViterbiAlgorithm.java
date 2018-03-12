@@ -1,10 +1,13 @@
 package nlp;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,6 +16,7 @@ public class ViterbiAlgorithm {
     private String user_input = "";
     //private CorpusLoader crp;
     private Con2000Loader crp;
+    private ArrayList<String> verb_list;
     
     public ViterbiAlgorithm(){
        // crp = new CorpusLoader();
@@ -22,6 +26,11 @@ public class ViterbiAlgorithm {
         else{
             crp = new Con2000Loader();
         }
+        
+        if(loadVerb() != null){
+            verb_list = loadVerb();
+        }
+ 
     }
     
     public ViterbiAlgorithm(String input){
@@ -34,6 +43,21 @@ public class ViterbiAlgorithm {
         else{
             crp = new Con2000Loader();
         }
+    }
+    
+    public ArrayList<String> loadVerb(){
+        ArrayList<String> temp = new ArrayList<>();
+        try{
+            Scanner scn = new Scanner(new File("verb.txt"));
+            while(scn.hasNext()){
+                temp.add(scn.next());
+            }
+        }
+        catch(IOException e){
+            System.out.println(e);
+            return null;
+        }
+        return temp;
     }
     
     public Con2000Loader loadCorpus(){
@@ -61,14 +85,12 @@ public class ViterbiAlgorithm {
                 if(!tokenized.get(i).equals(tokenized.get(i).toLowerCase())){
                     mapped.put(tokenized.get(i), "NNP");
                 }
-                else if(i > 0){
-                    mapped.put(tokenized.get(i),getHighestTransition(mapped.get(tokenized.get(i - 1))));
+                else if(isVerb(tokenized.get(i)) != null){
+                    mapped.put(tokenized.get(i), isVerb(tokenized.get(i)));
                 }
                 else{
-                    System.out.println("Entered here");
                     mapped.put(tokenized.get(i), "NN");
                 }
-                //mapped.put(tokenized.get(i), "UNK");
                 continue;
             }
             
@@ -146,5 +168,74 @@ public class ViterbiAlgorithm {
             }
         }
         return max_tag;
+    }
+    
+    public String isVerb(String word){
+        if(word.endsWith("ies")){
+            if(word.equalsIgnoreCase("dies") || word.equalsIgnoreCase("tries")){
+                return "VBG";
+            }
+            else{
+                for(String verbs:verb_list){
+                    if(verbs.contains(word.substring(0, word.indexOf("ies")) + "y")){
+                        return "VBG";
+                    }
+                }
+            }
+        }
+        
+        if(word.endsWith("us")){
+            for(String verbs:verb_list){
+                if(verbs.contains(word))
+                    return "VBG";
+            }
+        }
+        
+        if(word.endsWith("es")){
+            int index = word.indexOf("es");
+            if(word.length() > 4 && !isVowel(word.charAt(index - 1)) && isVowel(word.charAt(index - 2))){
+                return "VBG";
+            }
+        }
+        
+        if(word.equalsIgnoreCase("bit"))
+            return "VBD";
+        
+        if(word.equalsIgnoreCase("thought") || word.equalsIgnoreCase("fought") || word.equalsIgnoreCase("sought") || word.equalsIgnoreCase("bought") || word.equalsIgnoreCase("brought"))
+            return "VBD";
+        
+        if(word.endsWith("ang")){
+            int index = word.indexOf("ang");
+            String consonant = "srtw";
+            if(isVowel(word.charAt(index - 1))){
+                for(String verbs:verb_list){
+                    for(char cons:consonant.toCharArray()){
+                        if(verbs.equalsIgnoreCase(word.charAt(index - 1) + cons + "ing"))
+                            return "VBG";
+                    }
+                }
+            }
+        }
+        
+        if(word.equalsIgnoreCase("caught") || word.equalsIgnoreCase("taught"))
+            return "VBG";
+        
+        /*
+        if(word.endsWith("wn")){
+            if(word.equalsIgnoreCase("") || word.equalsIgnoreCase("") || word.equalsIgnoreCase("") || word.equalsIgnoreCase("") || word.equalsIgnoreCase("") || word.equalsIgnoreCase(""))
+                return "VBD";
+            if(isVowel(word.charAt(word.indexOf("wn") - 1) ) )
+        }*/
+        
+        return null;
+    }
+    
+    private boolean isVowel(char character){
+        String vowel = "aeiou";
+        for(char ch:vowel.toCharArray()){
+            if(character == ch)
+                return true;
+        }
+        return false;
     }
 }

@@ -31,9 +31,6 @@ public class Chunker {
                 nouns.add(chunking.substring(0,chunking.length() - 1));
                 chunking = "";
             }
-            /*if(sentence.indexOf(x) > 0 && tagged.get(x).equals("CD") && tagged.get(sentence.get(sentence.indexOf(x) - 1)).equals("DT")){
-                chunking += x + " ";
-            }*/
         }
         if(!chunking.equals(""))
             nouns.add(chunking.substring(0,chunking.length() - 1));
