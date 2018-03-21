@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -205,27 +206,41 @@ public class ViterbiAlgorithm {
             return "VBD";
         
         if(word.endsWith("ang")){
-            int index = word.indexOf("ang");
-            String consonant = "srtw";
-            if(isVowel(word.charAt(index - 1))){
-                for(String verbs:verb_list){
-                    for(char cons:consonant.toCharArray()){
-                        if(verbs.equalsIgnoreCase(word.charAt(index - 1) + cons + "ing"))
-                            return "VBG";
-                    }
-                }
+            for(String verbs:verb_list){
+                if(verbs.equalsIgnoreCase(word.replace("ang", "ing")))
+                    return "VBG";
             }
         }
         
         if(word.equalsIgnoreCase("caught") || word.equalsIgnoreCase("taught"))
             return "VBG";
         
-        /*
         if(word.endsWith("wn")){
-            if(word.equalsIgnoreCase("") || word.equalsIgnoreCase("") || word.equalsIgnoreCase("") || word.equalsIgnoreCase("") || word.equalsIgnoreCase("") || word.equalsIgnoreCase(""))
+            if(word.equalsIgnoreCase("drown") || word.equalsIgnoreCase("frown") || word.equalsIgnoreCase("disown"))
                 return "VBD";
-            if(isVowel(word.charAt(word.indexOf("wn") - 1) ) )
-        }*/
+            else if(word.equalsIgnoreCase("clown") || word.endsWith("crown"))
+                return "NN";
+            char list[] = {'r','l','h','n','s'};
+            ArrayList<Character> lst = new ArrayList<>(Arrays.asList());
+            if(word.length() >= 4 && isVowel(word.charAt(word.indexOf("wn") - 1)) && lst.contains(word.charAt(word.indexOf("wn") - 2))){
+                return "VBN";
+            }
+        }
+        
+        if(word.equalsIgnoreCase("blew") || word.equalsIgnoreCase("flew") || word.equalsIgnoreCase("drew")){
+            return "VBD";
+        }
+        
+        if(word.equalsIgnoreCase("accept")){
+            return "VB";
+        }
+        else if(word.endsWith("ept")){
+            for(String verbs:verb_list){
+                if(verbs.equalsIgnoreCase(word.replace("ept", "eep")))
+                    return "VBD";
+            }
+        }
+        
         
         return null;
     }

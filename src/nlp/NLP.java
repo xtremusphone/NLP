@@ -34,12 +34,12 @@ public class NLP {
             ObjectInputStream obj = new ObjectInputStream(new FileInputStream("Model.slz"));
             try {
                 Con2000Loader temp = (Con2000Loader)obj.readObject();
-                String word = "while";
+                String word = "the";
                 for(String wordss:temp.getListofWords()){
-                    if(temp.getListofWordsData().get(wordss).pos_tag_list.contains("VB") || temp.getListofWordsData().get(wordss).pos_tag_list.contains("VBD"))
+                    if(temp.getListofWordsData().get(wordss).pos_tag_list.contains("PRP") || temp.getListofWordsData().get(wordss).pos_tag_list.contains("PRP"))
                         System.out.println(wordss);
                 }
-                //System.out.println(temp.getListofWordsData().get(word).pos_tag_list + temp.getListofWordsData().get(word).pos_tag_frequency.toString());
+                System.out.println(temp.getListofWordsData().get(word).pos_tag_list + temp.getListofWordsData().get(word).pos_tag_frequency.toString());
                 //System.out.println(temp.getListofPOSTags());
                 //System.out.println(temp.getPOSTransFreq().get("DTNNP"));
             } catch (ClassNotFoundException ex) {
