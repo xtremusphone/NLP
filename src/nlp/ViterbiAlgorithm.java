@@ -61,14 +61,17 @@ public class ViterbiAlgorithm {
                 if(!tokenized.get(i).equals(tokenized.get(i).toLowerCase())){
                     mapped.put(tokenized.get(i), "NNP");
                 }
-                else if(i > 0){
-                    mapped.put(tokenized.get(i),getHighestTransition(mapped.get(tokenized.get(i - 1))));
+                else if(convertToRoot(tokenized.get(i),input) != null){
+                    mapped.put(tokenized.get(i), convertToRoot(tokenized.get(i),input));
                 }
                 else{
-                    System.out.println("Entered here");
                     mapped.put(tokenized.get(i), "NN");
                 }
-                //mapped.put(tokenized.get(i), "UNK");
+                continue;
+            }
+            
+            if(isColour(tokenized.get(i),tokenized)){
+                mapped.put(tokenized.get(i), "JJ");
                 continue;
             }
             
@@ -136,6 +139,46 @@ public class ViterbiAlgorithm {
         return mapped;
     }
     
+    public String convertToRoot(String word,String sentence){
+        //words that ends with ies
+        if(word.endsWith("ies") && !word.equalsIgnoreCase("dies") && !word.equalsIgnoreCase("ties")){
+            if(crp.getListofWords().contains(word.substring(0,word.indexOf("ies")))){
+                if(crp.getListofWordsData().get(word.substring(0,word.indexOf("ies"))).pos_tag_list.contains("VB")){
+                    return "VBG";
+                }
+            }
+        }
+        else{
+            if(word.equalsIgnoreCase("dies") || word.equalsIgnoreCase("ties")){
+                return "VBG";
+            }
+        }
+        
+        if(word.endsWith("it") && crp.getListofWordsData().containsKey(word.substring(0,word.indexOf("it")) + "e")){
+            return "VBD";
+        }
+        
+        if(word.equalsIgnoreCase("thought") || word.equalsIgnoreCase("sought") || word.equalsIgnoreCase("bought") || word.equalsIgnoreCase("brought") || word.equalsIgnoreCase("fought")){
+            return "VBD";
+        }
+
+        if(word.equalsIgnoreCase("think") || word.equalsIgnoreCase("seek") || word.equalsIgnoreCase("buy") || word.equalsIgnoreCase("bring") || word.equalsIgnoreCase("fight")){
+            return "VB";
+        }
+        
+        if(word.endsWith("ang") || word.endsWith("rang") || word.endsWith("tang") || word.endsWith("wang") && isConsonant(word,word.indexOf("ang") - 1)){
+            return "VBD";
+        }
+        
+        if(word.equalsIgnoreCase("caught") || word.equalsIgnoreCase("taught")){
+            return "VBD";
+        }
+        
+        
+        
+        return null;
+    }
+    
     public String getHighestTransition(String previous_tag){
         int max_score = 0;
         String max_tag = "";
@@ -145,6 +188,32 @@ public class ViterbiAlgorithm {
                 max_tag = tag;
             }
         }
+        
+        String consonant = "aeiou";
+        
         return max_tag;
+    }
+    
+    public boolean isConsonant(String word,int index){
+        String vowels = "aeiou";
+        for(char x:vowels.toCharArray()){
+            if((word.charAt(index) + "").equalsIgnoreCase(x + "")){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public boolean isColour(String word,List<String> sentence){
+        String[] colours = {"red","blue","green","yellow","orange","purple","black","gray","white","rose","gold"};
+        if(sentence.contains("Colour") || sentence.contains("colour") || sentence.contains("color") || 
+                sentence.contains("color") || sentence.contains("colored") || sentence.contains("Colored") || sentence.contains("coloured") || sentence.contains("Coloured")){
+            for(String cl:colours){
+                if(word.equalsIgnoreCase(cl))
+                    return true;
+            }
+        }
+        
+        return false;
     }
 }
