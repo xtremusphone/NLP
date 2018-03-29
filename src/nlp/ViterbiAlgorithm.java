@@ -241,8 +241,41 @@ public class ViterbiAlgorithm {
             }
         }
         
+        if(word.endsWith("iting") || word.endsWith("ating") || word.endsWith("outing") || word.endsWith("uoting")){
+            return "VBG";
+        }
         
-        return null;
+        if(word.endsWith("eating") && !word.equalsIgnoreCase("eating"))
+            return "VBG";
+        
+        if(word.endsWith("ting")){
+            return "VBG";
+        }
+        
+        if(word.endsWith("nning") || word.endsWith("uning") || word.endsWith("oning") || word.endsWith("ining") || word.endsWith("caning")){
+            return "VBG";
+        }
+        
+        if(!word.endsWith("ening") && word.endsWith("ning")){
+            return "VBG";
+        }
+        
+        if(word.endsWith("aking") || word.endsWith("iving") || word.endsWith("dging") || word.endsWith("gling") || word.endsWith("tling") || word.endsWith("ching") || word.endsWith("nging") || word.endsWith("bling") || word.endsWith("kling")){
+            return "VBD";
+        }
+        
+        if(word.endsWith("ing"))
+            return "VBD";
+        
+        if(!word.endsWith("dd") || !word.endsWith("rd") || !word.endsWith("ld") || !word.endsWith("nd") || !word.endsWith("ad") || !word.endsWith("ed") || !word.endsWith("id") || !word.endsWith("od") ||!word.endsWith("ud") && word.endsWith("d")){
+            return "VBD";
+        }
+        
+        if(word.endsWith("gned") || word.endsWith("yed") || word.endsWith("ned") || word.endsWith("hed") || word.endsWith("led") || word.endsWith("bed") || word.endsWith("cked") || word.endsWith("rked") || word.endsWith("ssed") || word.endsWith("rreded") || word.endsWith("med")
+                || word.endsWith("ured") || word.endsWith("ied") || word.endsWith("red") || word.endsWith("tted") || word.endsWith("dded") || word.endsWith("gned"))
+            return "VBD";
+        
+        return null; 
     }
     
     private boolean isVowel(char character){

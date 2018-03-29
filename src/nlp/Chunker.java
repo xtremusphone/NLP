@@ -60,4 +60,15 @@ public class Chunker {
         }
         return nounphrase;
     }
+    
+    public List<String> getVerbChunk(HashMap<String,String> tagged,ArrayList<String> sentence){
+        ArrayList<String> verbchunk = new ArrayList<>();
+        String chunking = "";
+        /*for(String word:sentence){
+            if(!chunking.equals("") && ){
+                
+            }
+        }*/
+        return verbchunk;
+    }
 }
