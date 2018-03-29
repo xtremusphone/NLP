@@ -30,12 +30,24 @@ public class NLP {
             }
             
         }*/
+<<<<<<< HEAD
         try{
             ObjectInputStream obj = new ObjectInputStream(new FileInputStream("Model.slz"));
             try {
                 Con2000Loader temp = (Con2000Loader)obj.readObject();
                 String word = "not";
                 
+=======
+       try{
+            ObjectInputStream obj = new ObjectInputStream(new FileInputStream("Model.slz"));
+            try {
+                Con2000Loader temp = (Con2000Loader)obj.readObject();
+                String word = "were";
+                for(String wordss:temp.getListofWords()){
+                    if(temp.getListofWordsData().get(wordss).pos_tag_list.contains("RP") || temp.getListofWordsData().get(wordss).pos_tag_list.contains("RP"))
+                        System.out.println(wordss);
+                }
+>>>>>>> 0915d0853b8816df40be8a2a1d911ab1d529abe6
                 System.out.println(temp.getListofWordsData().get(word).pos_tag_list + temp.getListofWordsData().get(word).pos_tag_frequency.toString());
                 //System.out.println(temp.getListofPOSTags());
                 //System.out.println(temp.getPOSTransFreq().get("DTNNP"));

@@ -1,10 +1,14 @@
 package nlp;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,6 +17,7 @@ public class ViterbiAlgorithm {
     private String user_input = "";
     //private CorpusLoader crp;
     private Con2000Loader crp;
+    private ArrayList<String> verb_list;
     
     public ViterbiAlgorithm(){
        // crp = new CorpusLoader();
@@ -22,6 +27,11 @@ public class ViterbiAlgorithm {
         else{
             crp = new Con2000Loader();
         }
+        
+        if(loadVerb() != null){
+            verb_list = loadVerb();
+        }
+ 
     }
     
     public ViterbiAlgorithm(String input){
@@ -34,6 +44,21 @@ public class ViterbiAlgorithm {
         else{
             crp = new Con2000Loader();
         }
+    }
+    
+    public ArrayList<String> loadVerb(){
+        ArrayList<String> temp = new ArrayList<>();
+        try{
+            Scanner scn = new Scanner(new File("verb.txt"));
+            while(scn.hasNext()){
+                temp.add(scn.next());
+            }
+        }
+        catch(IOException e){
+            System.out.println(e);
+            return null;
+        }
+        return temp;
     }
     
     public Con2000Loader loadCorpus(){
@@ -61,17 +86,25 @@ public class ViterbiAlgorithm {
                 if(!tokenized.get(i).equals(tokenized.get(i).toLowerCase())){
                     mapped.put(tokenized.get(i), "NNP");
                 }
+<<<<<<< HEAD
                 else if(convertToRoot(tokenized.get(i),input) != null){
                     mapped.put(tokenized.get(i), convertToRoot(tokenized.get(i),input));
+=======
+                else if(isVerb(tokenized.get(i)) != null){
+                    mapped.put(tokenized.get(i), isVerb(tokenized.get(i)));
+>>>>>>> 0915d0853b8816df40be8a2a1d911ab1d529abe6
                 }
                 else{
                     mapped.put(tokenized.get(i), "NN");
                 }
+<<<<<<< HEAD
                 continue;
             }
             
             if(isColour(tokenized.get(i),tokenized)){
                 mapped.put(tokenized.get(i), "JJ");
+=======
+>>>>>>> 0915d0853b8816df40be8a2a1d911ab1d529abe6
                 continue;
             }
             
@@ -194,6 +227,7 @@ public class ViterbiAlgorithm {
         return max_tag;
     }
     
+<<<<<<< HEAD
     public boolean isConsonant(String word,int index){
         String vowels = "aeiou";
         for(char x:vowels.toCharArray()){
@@ -214,6 +248,121 @@ public class ViterbiAlgorithm {
             }
         }
         
+=======
+    public String isVerb(String word){
+        if(word.endsWith("ies")){
+            if(word.equalsIgnoreCase("dies") || word.equalsIgnoreCase("tries")){
+                return "VBG";
+            }
+            else{
+                for(String verbs:verb_list){
+                    if(verbs.contains(word.substring(0, word.indexOf("ies")) + "y")){
+                        return "VBG";
+                    }
+                }
+            }
+        }
+        
+        if(word.endsWith("us")){
+            for(String verbs:verb_list){
+                if(verbs.contains(word))
+                    return "VBG";
+            }
+        }
+        
+        if(word.endsWith("es")){
+            int index = word.indexOf("es");
+            if(word.length() > 4 && !isVowel(word.charAt(index - 1)) && isVowel(word.charAt(index - 2))){
+                return "VBG";
+            }
+        }
+        
+        if(word.equalsIgnoreCase("bit"))
+            return "VBD";
+        
+        if(word.equalsIgnoreCase("thought") || word.equalsIgnoreCase("fought") || word.equalsIgnoreCase("sought") || word.equalsIgnoreCase("bought") || word.equalsIgnoreCase("brought"))
+            return "VBD";
+        
+        if(word.endsWith("ang")){
+            for(String verbs:verb_list){
+                if(verbs.equalsIgnoreCase(word.replace("ang", "ing")))
+                    return "VBG";
+            }
+        }
+        
+        if(word.equalsIgnoreCase("caught") || word.equalsIgnoreCase("taught"))
+            return "VBG";
+        
+        if(word.endsWith("wn")){
+            if(word.equalsIgnoreCase("drown") || word.equalsIgnoreCase("frown") || word.equalsIgnoreCase("disown"))
+                return "VBD";
+            else if(word.equalsIgnoreCase("clown") || word.endsWith("crown"))
+                return "NN";
+            char list[] = {'r','l','h','n','s'};
+            ArrayList<Character> lst = new ArrayList<>(Arrays.asList());
+            if(word.length() >= 4 && isVowel(word.charAt(word.indexOf("wn") - 1)) && lst.contains(word.charAt(word.indexOf("wn") - 2))){
+                return "VBN";
+            }
+        }
+        
+        if(word.equalsIgnoreCase("blew") || word.equalsIgnoreCase("flew") || word.equalsIgnoreCase("drew")){
+            return "VBD";
+        }
+        
+        if(word.equalsIgnoreCase("accept")){
+            return "VB";
+        }
+        else if(word.endsWith("ept")){
+            for(String verbs:verb_list){
+                if(verbs.equalsIgnoreCase(word.replace("ept", "eep")))
+                    return "VBD";
+            }
+        }
+        
+        if(word.endsWith("iting") || word.endsWith("ating") || word.endsWith("outing") || word.endsWith("uoting")){
+            return "VBG";
+        }
+        
+        if(word.endsWith("eating") && !word.equalsIgnoreCase("eating"))
+            return "VBG";
+        
+        if(word.endsWith("ting")){
+            return "VBG";
+        }
+        
+        if(word.endsWith("nning") || word.endsWith("uning") || word.endsWith("oning") || word.endsWith("ining") || word.endsWith("caning")){
+            return "VBG";
+        }
+        
+        if(!word.endsWith("ening") && word.endsWith("ning")){
+            return "VBG";
+        }
+        
+        if(word.endsWith("aking") || word.endsWith("iving") || word.endsWith("dging") || word.endsWith("gling") || word.endsWith("tling") || word.endsWith("ching") || word.endsWith("nging") || word.endsWith("bling") || word.endsWith("kling")){
+            return "VBD";
+        }
+        
+        if(word.endsWith("ing"))
+            return "VBD";
+        
+        if(!word.endsWith("dd") || !word.endsWith("rd") || !word.endsWith("ld") || !word.endsWith("nd") || !word.endsWith("ad") || !word.endsWith("ed") || !word.endsWith("id") || !word.endsWith("od") ||!word.endsWith("ud") && word.endsWith("d")){
+            return "VBD";
+        }
+        
+        if(word.endsWith("gned") || word.endsWith("yed") || word.endsWith("ned") || word.endsWith("hed") || word.endsWith("led") || word.endsWith("bed") || word.endsWith("cked") || word.endsWith("rked") || word.endsWith("ssed") || word.endsWith("rreded") || word.endsWith("med")
+                || word.endsWith("ured") || word.endsWith("ied") || word.endsWith("red") || word.endsWith("tted") || word.endsWith("dded") || word.endsWith("gned"))
+            return "VBD";
+        
+        return null; 
+    }
+    
+    private boolean isVowel(char character){
+        String vowel = "aeiou";
+        for(char ch:vowel.toCharArray()){
+            if(character == ch)
+                return true;
+        }
+>>>>>>> 0915d0853b8816df40be8a2a1d911ab1d529abe6
         return false;
     }
 }
