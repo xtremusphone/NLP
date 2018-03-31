@@ -86,25 +86,17 @@ public class ViterbiAlgorithm {
                 if(!tokenized.get(i).equals(tokenized.get(i).toLowerCase())){
                     mapped.put(tokenized.get(i), "NNP");
                 }
-<<<<<<< HEAD
-                else if(convertToRoot(tokenized.get(i),input) != null){
-                    mapped.put(tokenized.get(i), convertToRoot(tokenized.get(i),input));
-=======
                 else if(isVerb(tokenized.get(i)) != null){
                     mapped.put(tokenized.get(i), isVerb(tokenized.get(i)));
->>>>>>> 0915d0853b8816df40be8a2a1d911ab1d529abe6
                 }
                 else{
                     mapped.put(tokenized.get(i), "NN");
                 }
-<<<<<<< HEAD
                 continue;
             }
             
             if(isColour(tokenized.get(i),tokenized)){
                 mapped.put(tokenized.get(i), "JJ");
-=======
->>>>>>> 0915d0853b8816df40be8a2a1d911ab1d529abe6
                 continue;
             }
             
@@ -168,7 +160,6 @@ public class ViterbiAlgorithm {
             }
             mapped.put(tokenized.get(i), pos_max);
         }
-        
         return mapped;
     }
     
@@ -226,8 +217,7 @@ public class ViterbiAlgorithm {
         
         return max_tag;
     }
-    
-<<<<<<< HEAD
+
     public boolean isConsonant(String word,int index){
         String vowels = "aeiou";
         for(char x:vowels.toCharArray()){
@@ -247,8 +237,9 @@ public class ViterbiAlgorithm {
                     return true;
             }
         }
+        return false;
+    }
         
-=======
     public String isVerb(String word){
         if(word.endsWith("ies")){
             if(word.equalsIgnoreCase("dies") || word.equalsIgnoreCase("tries")){
@@ -362,7 +353,6 @@ public class ViterbiAlgorithm {
             if(character == ch)
                 return true;
         }
->>>>>>> 0915d0853b8816df40be8a2a1d911ab1d529abe6
         return false;
     }
 }
