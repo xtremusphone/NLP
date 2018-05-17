@@ -1,11 +1,6 @@
 package nlp;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class NLP {
     static String[] conjunctions = {"for","and","nor","but","or","yet","so"};
@@ -30,11 +25,13 @@ public class NLP {
             }
             
         }*/
-       try{
+        AutoCorrect ac = new AutoCorrect();
+        System.out.println(ac.spellChecker("frm"));
+      /* try{
             ObjectInputStream obj = new ObjectInputStream(new FileInputStream("Model.slz"));
             try {
                 Con2000Loader temp = (Con2000Loader)obj.readObject();
-                String word = "were";
+                String word = "old";
                 for(String wordss:temp.getListofWords()){
                     if(temp.getListofWordsData().get(wordss).pos_tag_list.contains("RP") || temp.getListofWordsData().get(wordss).pos_tag_list.contains("RP"))
                         System.out.println(wordss);
@@ -48,7 +45,7 @@ public class NLP {
         }
         catch(IOException e){
             System.out.println(e);
-        }
+        }*/
         //Con2000Loader cl = new Con2000Loader();
         //System.out.println(cl.getListofPOSTags().toString());
         //Testing tst = new Testing();

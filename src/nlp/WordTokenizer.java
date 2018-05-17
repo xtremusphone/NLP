@@ -1,9 +1,10 @@
 package nlp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WordTokenizer {
+public class WordTokenizer implements Serializable{
 
     //private List<String> compound;
     private String in;

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ViterbiAlgorithm {
+public class ViterbiAlgorithm implements Serializable{
     
     private String user_input = "";
     //private CorpusLoader crp;
@@ -199,16 +200,19 @@ public class ViterbiAlgorithm {
             }
         }
         
-        if(word.equalsIgnoreCase("bit"))
+        if(word.equalsIgnoreCase("bit")){
             return "VBD";
+        }
         
-        if(word.equalsIgnoreCase("thought") || word.equalsIgnoreCase("fought") || word.equalsIgnoreCase("sought") || word.equalsIgnoreCase("bought") || word.equalsIgnoreCase("brought"))
+        if(word.equalsIgnoreCase("thought") || word.equalsIgnoreCase("fought") || word.equalsIgnoreCase("sought") || word.equalsIgnoreCase("bought") || word.equalsIgnoreCase("brought")){
             return "VBD";
+        }
         
         if(word.endsWith("ang")){
             for(String verbs:verb_list){
-                if(verbs.equalsIgnoreCase(word.replace("ang", "ing")))
+                if(verbs.equalsIgnoreCase(word.replace("ang", "ing"))){
                     return "VBG";
+                }
             }
         }
         
@@ -222,7 +226,7 @@ public class ViterbiAlgorithm {
                 return "NN";
             char list[] = {'r','l','h','n','s'};
             ArrayList<Character> lst = new ArrayList<>(Arrays.asList());
-            if(word.length() >= 4 && isVowel(word.charAt(word.indexOf("wn") - 1)) && lst.contains(word.charAt(word.indexOf("wn") - 2))){
+            if(word.length() >= 4 && isVowel(word.charAt(word.indexOf("wn") - 1)) && lst.contains(word.charAt(word.indexOf("wn") - 2)) ){
                 return "VBN";
             }
         }
@@ -236,8 +240,9 @@ public class ViterbiAlgorithm {
         }
         else if(word.endsWith("ept")){
             for(String verbs:verb_list){
-                if(verbs.equalsIgnoreCase(word.replace("ept", "eep")))
+                if(verbs.equalsIgnoreCase(word.replace("ept", "eep"))){
                     return "VBD";
+                }
             }
         }
         
@@ -261,20 +266,23 @@ public class ViterbiAlgorithm {
         }
         
         if(word.endsWith("aking") || word.endsWith("iving") || word.endsWith("dging") || word.endsWith("gling") || word.endsWith("tling") || word.endsWith("ching") || word.endsWith("nging") || word.endsWith("bling") || word.endsWith("kling")){
+            System.out.println("end ING");
             return "VBD";
         }
         
-        if(word.endsWith("ing"))
+        if(word.endsWith("ing")){
+            System.out.println("end ING");
             return "VBD";
+        }
         
-        if(!word.endsWith("dd") || !word.endsWith("rd") || !word.endsWith("ld") || !word.endsWith("nd") || !word.endsWith("ad") || !word.endsWith("ed") || !word.endsWith("id") || !word.endsWith("od") ||!word.endsWith("ud") && word.endsWith("d")){
+        if(word.endsWith("dd") || word.endsWith("rd") || word.endsWith("ld") || word.endsWith("nd") || word.endsWith("ad") || word.endsWith("ed") || word.endsWith("id") || word.endsWith("od") || word.endsWith("ud") && word.endsWith("d")){
             return "VBD";
         }
         
         if(word.endsWith("gned") || word.endsWith("yed") || word.endsWith("ned") || word.endsWith("hed") || word.endsWith("led") || word.endsWith("bed") || word.endsWith("cked") || word.endsWith("rked") || word.endsWith("ssed") || word.endsWith("rreded") || word.endsWith("med")
-                || word.endsWith("ured") || word.endsWith("ied") || word.endsWith("red") || word.endsWith("tted") || word.endsWith("dded") || word.endsWith("gned"))
+                || word.endsWith("ured") || word.endsWith("ied") || word.endsWith("red") || word.endsWith("tted") || word.endsWith("dded") || word.endsWith("gned")){
             return "VBD";
-        
+        }
         return null; 
     }
     

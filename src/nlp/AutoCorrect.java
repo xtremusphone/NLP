@@ -21,8 +21,7 @@ public class AutoCorrect {
     private String wordErr;
     private ArrayList<String> bagOfWord;
     
-    public AutoCorrect(String word){
-        this.wordErr = word;
+    public AutoCorrect(){
         bagOfWord = new ArrayList<>();
         checkDictionaryFile();
         System.out.println(bagOfWord.size());
