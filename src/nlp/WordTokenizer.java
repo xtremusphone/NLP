@@ -116,6 +116,7 @@ public class WordTokenizer implements Serializable{
                 }
             }
             
+            //check if clitic or not
             if(original.contains("'") && original.endsWith("'s") && original.length() > 2){
                 compound.add(original.substring(0,original.indexOf("'")));
                 compound.add("'s");
@@ -128,9 +129,10 @@ public class WordTokenizer implements Serializable{
                 continue;
             }
             
-            //check if clitic or not
-            if(original.contains("'") && original.length() > 1 && original.indexOf("'") > 0){
-                
+            if(original.contains("'") && original.endsWith("'re") && original.length() > 3){
+                compound.add(original.substring(0,original.indexOf("'")));
+                compound.add("'re");
+                continue;
             }
             
             compound.add(original);

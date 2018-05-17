@@ -25,6 +25,7 @@ public class NLP {
             }
             
         }*/
+<<<<<<< HEAD
         AutoCorrect ac = new AutoCorrect();
         System.out.println(ac.spellChecker("frm"));
       /* try{
@@ -34,11 +35,22 @@ public class NLP {
                 String word = "old";
                 for(String wordss:temp.getListofWords()){
                     if(temp.getListofWordsData().get(wordss).pos_tag_list.contains("RP") || temp.getListofWordsData().get(wordss).pos_tag_list.contains("RP"))
+=======
+
+       try{
+            ObjectInputStream obj = new ObjectInputStream(new FileInputStream("Model.slz"));
+            try {
+                Con2000Loader temp = (Con2000Loader)obj.readObject();
+                String word = "cat";
+                /*for(String wordss:temp.getListofWords()){
+                    if(temp.getListofWordsData().get(wordss).pos_tag_list.contains("RB") || temp.getListofWordsData().get(wordss).pos_tag_list.contains("RB"))
+>>>>>>> 44a601fca7a8ec8246c217f4c91ad38ee449cd29
                         System.out.println(wordss);
-                }
+                }*/
+
                 System.out.println(temp.getListofWordsData().get(word).pos_tag_list + temp.getListofWordsData().get(word).pos_tag_frequency.toString());
                 //System.out.println(temp.getListofPOSTags());
-                //System.out.println(temp.getPOSTransFreq().get("DTNNP"));
+                //System.out.println(temp.getPOSTransFreq().keySet().toString());
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(NLP.class.getName()).log(Level.SEVERE, null, ex);
             }
